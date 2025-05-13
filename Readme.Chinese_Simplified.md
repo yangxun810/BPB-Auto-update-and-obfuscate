@@ -1,6 +1,6 @@
 # BPB-Auto-update-and-obfuscate
 
-自动同步并混淆 BPB-Worker-Panel 仓库下的Releases最新 worker.js 文件。
+自动同步并混淆 BPB-Worker-Panel 仓库下的Releases最新 `worker.js` 文件。
 
 [EN](Readme.md)|**简体中文**|[繁體中文](Readme.Chinese_Traditional.md) 
 
@@ -8,9 +8,9 @@
 
 1. 使用git clone命令/Download zip获取源文件。
 2. 创建一个私有仓库并提交本仓库的文件。
-3. [如果你此前并未启动过GitHub Actions功能] 进入 Actions 页面，点击 Enable workflows（启用 GitHub Actions）。
-4. 无需其他配置，GitHub 默认的 GITHUB_TOKEN 权限即可推送更新。
-5. 你可以手动点击 Run workflow，也可以等待每天定时自动检查。
+3. [如果你此前并未启动过GitHub Actions功能] 进入 Actions 页面，点击 **Enable workflows**（启用 GitHub Actions）。
+4. 无需其他配置，GitHub 默认的 `GITHUB_TOKEN` 权限即可推送更新。
+5. 你可以手动点击 **Run workflow**，也可以等待每天定时自动检查。
 
 > 注意：确保你的仓库默认分支为 main，否则推送时可能失败。
 
@@ -20,10 +20,10 @@
 
 ## 功能介绍
 
-- 每天自动检查 bia-pain-bache/BPB-Worker-Panel 仓库的最新 Release
+- 每天自动检查 `bia-pain-bache/BPB-Worker-Panel` 仓库的最新 Release
 - 自动下载最新版本的 worker.js 并重命名为origin.js
-- 混淆后重命名为 _worker.js
-- 同步更新本地 version.txt
+- 混淆后重命名为 `_worker.js`
+- 同步更新本地 `version.txt`
 - 自动提交并推送到本仓库
 
 ## 工作流程
@@ -31,19 +31,20 @@
 GitHub Actions 会每日 00:00（UTC 时间）自动运行：
 
 1. 获取上游仓库的最新 Release 版本号
-2. 比较本地 version.txt 的记录
-3. 自动下载，混淆，并替换 _worker.js
-4. 更新 version.txt
+2. 比较本地 `version.txt` 的记录
+3. 自动下载，混淆，并替换 `_worker.js`
+4. 更新 `version.txt`
 5. 自动提交并推送到主分支（main）
 
 ---
 
 ## 📂 目录结构
 
+```
 /
-├── _worker.js   
+├── `_worker.js`   
 ├── origin.js         
-├── version.txt        
+├── `version.txt`        
 ├── LICENSE            
 ├── .gitignore         
 ├── Readme.md
@@ -52,13 +53,14 @@ GitHub Actions 会每日 00:00（UTC 时间）自动运行：
 └── .github/
     └── workflows/
         └── update_worker.yml
+```
 
 ---
 
 ## ⚙️ 配置说明
 
-- 无需手动设置 Token：默认使用 GitHub 提供的 GITHUB_TOKEN 进行权限认证。
-- 如需修改同步源：编辑 .github/workflows/update_worker.yml，修改源仓库地址即可。
+- 无需手动设置 Token：默认使用 GitHub 提供的 `GITHUB_TOKEN` 进行权限认证。
+- 如需修改同步源：编辑 `.github/workflows/update_worker.yml`，修改源仓库地址即可。
 
 ---
 
