@@ -64,11 +64,12 @@ jobs:
         run: |
           javascript-obfuscator origin.js --output _worker.js \
             --compact true \
-              --identifier-names-generator mangled \
-              --rename-globals false \
-              --string-array false \
-              --transform-object-keys false \
-              --simplify true
+            --identifier-names-generator hexadecimal \
+            --rename-globals false \
+            --string-array false \
+            --transform-object-keys false \
+            --self-defending false \
+            --simplify true
 
           # 添加伪变更，确保 Git 能识别为更新
           echo "// Auto obfuscated at $(date -u)" >> _worker.js
