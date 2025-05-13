@@ -2,6 +2,8 @@
 
 自动同步并混淆 BPB-Worker-Panel 仓库下的Releases最新 worker.js 文件。
 
+[EN](Readme.md)|**简体中文**|[繁體中文](Readme.Chinese_Traditional.md) 
+
 ## 🚀 快速开始（不建议直接Fork运行，推荐私有仓库部署。）
 
 1. 使用git clone命令/Download zip获取源文件。
@@ -39,11 +41,14 @@ GitHub Actions 会每日 00:00（UTC 时间）自动运行：
 ## 📂 目录结构
 
 /
-├── _worker.js         
+├── _worker.js   
+├── origin.js         
 ├── version.txt        
 ├── LICENSE            
 ├── .gitignore         
-├── README.md          
+├── Readme.md
+├── Readme.Chinese_Simplified.md
+├── Readme.Chinese_Traditional.md
 └── .github/
     └── workflows/
         └── update_worker.yml
@@ -68,4 +73,5 @@ GitHub Actions 会每日 00:00（UTC 时间）自动运行：
 ## 📢 特别说明
 
 - 本仓库同步的内容来源于 [BPB-Worker-Panel](https://github.com/bia-pain-bache/BPB-Worker-Panel)。
+- GitHub Workflows的源码及编写参考了 [GitHub@byJoey/wk-Auto-update](https://github.com/byJoey/wk-Auto-update) 和 Hans汉斯.
 - 原项目版权归原作者所有，本项目仅用于自动同步更新。
