@@ -13,56 +13,55 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 检出仓库
+      - name: Checkout 仓库
         uses: actions/checkout@v4
 
-      - name: 安装 Node.js 和依赖
+      - name: 设置 Node.js 环境
         uses: actions/setup-node@v4
         with:
           node-version: "latest"
 
-      - name: 安装 Obfuscator 和 unzip
+      - name: 安装依赖
         run: |
           npm install -g javascript-obfuscator
-          sudo apt-get install -y unzip
+          sudo apt-get update
+          sudo apt-get install -y jq curl unzip
 
-      - name: 获取最新 release 信息
+      - name: 获取最新 release tag
         id: get_release
         run: |
           latest_tag=$(curl -s https://api.github.com/repos/bia-pain-bache/BPB-Worker-Panel/releases/latest | jq -r '.tag_name')
-          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
           echo "最新版本: $latest_tag"
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
-      - name: 读取本地版本
-        id: read_local
+      - name: 读取当前版本号
+        id: read_version
         run: |
           if [ -f "version.txt" ]; then
             current_version=$(cat version.txt | tr -d '\n' | tr -d '\r')
-            echo "当前版本: $current_version"
           else
             current_version=""
-            echo "首次运行，无版本记录"
           fi
+          echo "当前版本: $current_version"
           echo "current_version=$current_version" >> $GITHUB_ENV
 
-      - name: 判断是否需要更新
+      - name: 判断是否更新
         id: check_update
         run: |
-          if [ "${{ env.current_version }}" = "${{ env.latest_tag }}" ]; then
-            echo "无需更新"
+          if [ "$current_version" = "$latest_tag" ]; then
             echo "need_update=false" >> $GITHUB_ENV
+            echo "无需更新"
           else
-            echo "需要更新"
             echo "need_update=true" >> $GITHUB_ENV
+            echo "需要更新"
           fi
 
-      - name: 下载 worker.js 并混淆为 _worker.js
-        if: env.need_update == 'true'
+      - name: 下载最新版 worker.js
         run: |
-          echo "下载 worker.js..."
           curl -L -o origin.js "https://github.com/bia-pain-bache/BPB-Worker-Panel/releases/download/${{ env.latest_tag }}/worker.js"
-          
-          echo "开始混淆..."
+
+      - name: 混淆 JS 代码
+        run: |
           javascript-obfuscator origin.js --output _worker.js \
             --compact true \
             --identifier-names-generator hexadecimal \
@@ -74,12 +73,16 @@ jobs:
             --self-defending false \
             --simplify true
 
-          echo "${{ env.latest_tag }}" > version.txt
-          rm origin.js
+          # 添加伪变更，确保 Git 能识别为更新
+          echo "// Auto obfuscated at $(date -u)" >> _worker.js
 
-      - name: 提交混淆结果
-        if: env.need_update == 'true'
+      - name: 写入或更新 version.txt
+        run: |
+          echo "${{ env.latest_tag }}" > version.txt
+
+      - name: 提交更改
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: ":obfuscate: 更新并混淆 _worker.js 到版本 ${{ env.latest_tag }}"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          commit_message: |
+            🔁 Obfuscate _worker.js (version: ${{ env.latest_tag }})
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
